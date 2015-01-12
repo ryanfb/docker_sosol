@@ -2,6 +2,7 @@ FROM ubuntu:trusty
 MAINTAINER Ryan Baumann <ryan.baumann@gmail.com>
 
 # Install the Ubuntu packages.
+# The Duke mirror is just added here as backup for occasional main flakiness.
 RUN echo deb http://archive.linux.duke.edu/ubuntu/ trusty main >> /etc/apt/sources.list 
 RUN echo deb-src http://archive.linux.duke.edu/ubuntu/ trusty main >> /etc/apt/sources.list
 RUN apt-get update
@@ -23,10 +24,6 @@ RUN git clone git://github.com/sstephenson/rbenv.git .rbenv
 ENV PATH /root/.rbenv/bin:/root/.rbenv/shims:$PATH
 RUN echo 'eval "$(rbenv init -)"' > /etc/profile.d/rbenv.sh
 RUN chmod +x /etc/profile.d/rbenv.sh
-# RUN echo 'export PATH="/home/.rbenv/bin:$PATH"' >> .bash_profile
-# RUN echo 'eval "$(rbenv init -)"' >> .bash_profile
-# RUN exec bash
-# RUN mkdir .rbenv/plugins
 RUN git clone git://github.com/sstephenson/ruby-build.git #.rbenv/plugins/ruby-build
 RUN cd ruby-build; ./install.sh
 
@@ -41,14 +38,8 @@ ADD test_secret.rb /root/sosol/config/environments/test_secret.rb
 ADD production_secret.rb /root/sosol/config/environments/production_secret.rb
 
 # Configure MySQL
-# Create a database and user account for FromThePage to use.
-# Then update the config/database.yml file to point to the MySQL user account and database you created above.
-# Run
-#    rake db:migrate
-# to load the schema definition into the database account.
-# RUN gem install activerecord-jdbcsqlite3-adapter
 RUN service mysql restart; cd sosol; ./script/setup
 
 # Finally, start the application
-#EXPOSE 3000
-#CMD service mysql restart; cd sosol; ./script/server
+EXPOSE 3000
+CMD service mysql restart; cd sosol; ./script/server
