@@ -5,5 +5,5 @@ A Dockerfile for building and testing the Rails 3 version of [SoSOL](https://git
  
 * Test the build with `docker build .`
 * Tag the build with `docker build -t sosol .`
-* Run the build with `docker run -d --name sosol_dev sosol`
-* Find the mapped port with `docker port sosol_dev 3000`, then access it in a browser
+* Run the build with `docker run -d --name sosol_dev -p 3000:3000 sosol`
+* Access e.g. [localhost:3000](http://localhost:3000/) in a browser
